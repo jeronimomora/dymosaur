@@ -42,6 +42,11 @@ export default ({ onProcessStateChange }) => {
 
     const onDrop = useCallback(async ([ file ]) => {
 
+        if(!file){
+          alert.error('Only pdf files are supported.')
+          return
+        }
+
         // Do something with the files
         const apiUrl = process.env.REACT_APP_AWS_API_URL
         const generatePreSignedS3Url = apiUrl + 'generatePreSignedS3Url'
@@ -97,7 +102,7 @@ export default ({ onProcessStateChange }) => {
         }
 
         // Try to download the file, and automatically open it
-        
+
         try {
           const { signed_url: downloadSignedUrl, out_name: outName } = response.data.body
     
