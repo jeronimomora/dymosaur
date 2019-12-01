@@ -10,10 +10,7 @@ const baseStyle = {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '20px',
-  height: '500px',
-  marginLeft: '50px',
-  marginRight: '50px',
+  height: '100%',
   borderWidth: 2,
   borderRadius: 2,
   borderColor: '#eeeeee',
@@ -21,7 +18,7 @@ const baseStyle = {
   backgroundColor: '#fafafa',
   color: '#bdbdbd',
   outline: 'none',
-  transition: 'border .24s ease-in-out'
+  transition: 'border .24s ease-in-out',
 };
 
 const activeStyle = {
@@ -145,7 +142,7 @@ export default ({ onProcessStateChange }) => {
   }), [isDragAccept, isDragActive, isDragReject]);
 
   return (
-    <div className="container">
+    <div className="filedrop-container">
       <div {...getRootProps({style})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop your pdf or click here</p>
