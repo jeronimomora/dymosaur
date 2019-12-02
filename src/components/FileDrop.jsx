@@ -142,11 +142,9 @@ export default ({ onProcessStateChange }) => {
   }), [isDragAccept, isDragActive, isDragReject]);
 
   return (
-    <div className="filedrop-container">
       <div {...getRootProps({style})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop your pdf or click here</p>
       </div>
-    </div>
   );
 }

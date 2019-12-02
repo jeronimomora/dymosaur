@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import * as serviceWorker from './serviceWorker';
-import './index.css';
-import App from './App';
+import './css/index.css';
+import App from './components/App';
  
 // optional cofiguration
 const options = {
