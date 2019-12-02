@@ -44,6 +44,8 @@ export default ({ onProcessStateChange }) => {
           return
         }
 
+        onProcessStateChange(PROCESSING)
+
         // Do something with the files
         const apiUrl = process.env.REACT_APP_AWS_API_URL
         const generatePreSignedS3Url = apiUrl + 'generatePreSignedS3Url'
@@ -57,6 +59,7 @@ export default ({ onProcessStateChange }) => {
               name: file.name
           })
         } catch (error) {
+          onProcessStateChange(READY)
           alert.error('Something went wrong!')
           console.log(error)
           return
@@ -66,8 +69,6 @@ export default ({ onProcessStateChange }) => {
 
         try {
           const { signed_url: signedUrl } = response.data.body
-
-          onProcessStateChange(PROCESSING)
 
           response = await axios.put(signedUrl, file, {
               headers: {
@@ -114,15 +115,12 @@ export default ({ onProcessStateChange }) => {
               link.click()
           });
 
-          onProcessStateChange(READY)
-
         } catch (error) {
-
-          onProcessStateChange(READY)
-
+          alert.error('Something went wrong!')
           console.log(error.response)
-          return
         }
+
+        onProcessStateChange(READY)
 
     }, [alert, onProcessStateChange])
 
