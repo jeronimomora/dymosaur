@@ -1,0 +1,16 @@
+.donation {
+    background-color: white;
+    border: none;
+    color: #8A2BE2;
+    margin-left: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    width: 150px;
+}
+
+.donation:hover {
+    cursor:pointer;
+    background-color: #eeeeee;
+}

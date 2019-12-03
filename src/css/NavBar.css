@@ -2,10 +2,15 @@
     background-color: #8A2BE2;
     height: 60px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navbar-text {
     font-size: 30px;
     color: white;
-    width: 100%;
+    padding-right: 30px;
+    font-weight: 500;
 }
