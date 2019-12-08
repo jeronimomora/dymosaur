@@ -3,18 +3,18 @@
   float: left;
   overflow-x: hidden;
   overflow-y: scroll;
-}
 
-.how-to__explanation {
-  text-align: left;
-  line-height: 2;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.how-to__arrow-path {
-  fill: #8A2BE2;
-  transform: translate(0, 0); /* fix for safari */
+  &__explanation {
+    text-align: left;
+    line-height: 2;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  &__arrow-path {
+    fill: #8A2BE2;
+    transform: translate(0, 0); /* fix for safari */
+  }
 }
 
 .label {
@@ -24,13 +24,13 @@
   border-radius: 1px;
   margin-top: 20px;
   margin-bottom: 20px;
-}
-  
-.label-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
+
+  &-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
 }
 
 @media screen and (max-width: 1028px) {

@@ -2,7 +2,7 @@ import React from 'react'
 import Loader from 'react-loader-spinner'
 import FileDrop from './FileDrop';
 import { READY } from '../constants'
-import '../css/FilePanel.css'
+import '../styles/FilePanel.scss'
 
 export default ({ loading, onProcessStateChange }) => (
     <div className="file-panel">

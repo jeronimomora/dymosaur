@@ -8,9 +8,14 @@
     width: 100%;
 }
 
-.navbar-text {
+.title {
     font-size: 30px;
     color: white;
-    padding-right: 30px;
+    padding-left: 30px;
     font-weight: 500;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
 }

@@ -1,7 +1,7 @@
 import React from 'react'
-import '../css/HowTo.css'
+import '../styles/HowTo.scss'
 
-export default (props) => (
+export default () => (
     <div className="how-to">
         <h1>Sup.</h1>
         <p className="how-to__explanation">

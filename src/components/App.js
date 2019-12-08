@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import FilePanel from './FilePanel'
 import NavBar from './NavBar'
 import { READY } from '../constants'
-import '../css/App.css';
+import '../styles/App.scss';
 import HowTo from './HowTo';
+import Contact from './Contact';
 
 const App = (props) => {
 
@@ -16,16 +18,26 @@ const App = (props) => {
   }
 
   return (
-    <div className="App">
-      <NavBar />
-      <div className="content">
-        <HowTo />
-        <FilePanel 
-          loading={state.loading}
-          onProcessStateChange={onProcessStateChange}
-        />
+    <Router>
+      <div className="App">
+        <NavBar />
+        <div className="content">
+          <Switch>
+            <Route exact path='/'>
+              <HowTo />
+            </Route>
+            <Route path='/contact'>
+              <Contact />
+            </Route>
+          </Switch>
+          <FilePanel 
+            loading={state.loading}
+            onProcessStateChange={onProcessStateChange}
+          />
+        </div>
       </div>
-    </div>
+    </Router>
+
   );
 }
 
