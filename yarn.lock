@@ -8423,10 +8423,10 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-alert-template-basic-with-icons@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/react-alert-template-basic-with-icons/-/react-alert-template-basic-with-icons-1.1.3.tgz#4a8a724608d9f6bec34f65dc1937e62f0717c823"
-  integrity sha512-bQY+FOpQbC8hs+zFtT9nKureUv2tIikNQPOev5D4KpqijwucaqjznjiTT39YoYEdVpidPZ7ChRelyheKEtgLgg==
+react-alert-template-basic-with-icons@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-alert-template-basic-with-icons/-/react-alert-template-basic-with-icons-1.2.2.tgz#b08aca95b9de5e9e3393d82cf4c76e580c1d95c5"
+  integrity sha512-XIizBgM39oXl5c3Ep99ugyrRxN0pZmCXdGXEAkk0QSc58ik/vEFXx0rck64ttQZs6BPx8WODeDKIaJ+iYZUUOA==
 
 react-alert@^6.0.0:
   version "6.0.0"
