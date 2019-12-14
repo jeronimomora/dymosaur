@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic'
 import * as serviceWorker from './serviceWorker';
 import './styles/index.scss';
 import App from './components/App';
+import StyledAlertTemplate from './components/StyledAlertTemplate'
  
 // optional cofiguration
 const options = {
@@ -15,7 +15,7 @@ const options = {
 }
 
 const Root = () => (
-    <AlertProvider template={AlertTemplate} {...options}>
+    <AlertProvider template={StyledAlertTemplate} {...options}>
       <App />
     </AlertProvider>
   )
