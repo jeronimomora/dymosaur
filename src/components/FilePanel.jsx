@@ -1,16 +1,14 @@
-import React from 'react'
-import Loader from 'react-loader-spinner'
+import React from 'react';
+import Loader from 'react-loader-spinner';
 import FileDrop from './FileDrop';
-import { READY } from '../constants'
-import '../styles/FilePanel.scss'
+import { READY } from '../constants';
+import '../styles/FilePanel.scss';
 
 export default ({ loading, onProcessStateChange }) => (
-    <div className="file-panel">
-        { loading === READY ?
-            <FileDrop 
-                onProcessStateChange={onProcessStateChange}
-            />
-        : 
+    <section className="file-panel">
+        {loading === READY ? (
+            <FileDrop onProcessStateChange={onProcessStateChange} />
+        ) : (
             <Loader
                 type="Circles"
                 color="#8A2BE2"
@@ -18,6 +16,6 @@ export default ({ loading, onProcessStateChange }) => (
                 width={100}
                 timeout={60000}
             />
-        }
-    </div>
-)
+        )}
+    </section>
+);
