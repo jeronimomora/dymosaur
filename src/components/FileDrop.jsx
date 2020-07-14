@@ -1,148 +1,153 @@
 import React, { useMemo, useCallback } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
-import { useAlert } from 'react-alert'
-import { READY, PROCESSING } from '../constants'
+import { useAlert } from 'react-alert';
+import { READY, PROCESSING } from '../constants';
 
 const baseStyle = {
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100%',
-  borderWidth: 2,
-  borderRadius: 2,
-  borderColor: '#eeeeee',
-  borderStyle: 'dashed',
-  backgroundColor: '#fafafa',
-  color: '#bdbdbd',
-  outline: 'none',
-  transition: 'border .24s ease-in-out',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#fafafa',
+    color: '#bdbdbd',
+    outline: '2px dashed #ccc',
+    outlineOffset: '-4px',
+    transition: 'border .24s ease-in-out',
+    margin: '1px',
 };
 
 const activeStyle = {
-  borderColor: '#2196f3'
+    outlineColor: '#2196f3',
 };
 
 const acceptStyle = {
-  borderColor: '#00e676'
+    outlineColor: '#00e676',
 };
 
 const rejectStyle = {
-  borderColor: '#ff1744'
+    outlineColor: '#ff1744',
 };
 
 export default ({ onProcessStateChange }) => {
+    const alert = useAlert();
 
-    const alert = useAlert()
+    const onDrop = useCallback(
+        async ([file]) => {
+            if (!file) {
+                alert.error('Only pdf files are supported.');
+                return;
+            }
 
-    const onDrop = useCallback(async ([ file ]) => {
+            onProcessStateChange(PROCESSING);
 
-        if(!file){
-          alert.error('Only pdf files are supported.')
-          return
-        }
+            // Do something with the files
+            const apiUrl = process.env.REACT_APP_AWS_API_URL;
+            const generatePreSignedS3Url = apiUrl + 'generatePreSignedS3Url';
+            const processAmazonShippingLabelUrl =
+                apiUrl + 'processShippingLabel';
 
-        onProcessStateChange(PROCESSING)
+            // Get the signed url
+            let response;
 
-        // Do something with the files
-        const apiUrl = process.env.REACT_APP_AWS_API_URL
-        const generatePreSignedS3Url = apiUrl + 'generatePreSignedS3Url'
-        const processAmazonShippingLabelUrl = apiUrl + 'processShippingLabel'
+            try {
+                response = await axios.post(generatePreSignedS3Url, {
+                    name: file.name,
+                });
+            } catch (error) {
+                onProcessStateChange(READY);
+                alert.error('Something went wrong!');
+                console.log(error);
+                return;
+            }
 
-        // Get the signed url
-        let response
+            // Upload the file to s3
 
-        try {
-          response = await axios.post(generatePreSignedS3Url, {
-              name: file.name
-          })
-        } catch (error) {
-          onProcessStateChange(READY)
-          alert.error('Something went wrong!')
-          console.log(error)
-          return
-        }
+            try {
+                const { signed_url: signedUrl } = response.data.body;
 
-        // Upload the file to s3
+                response = await axios.put(signedUrl, file, {
+                    headers: {
+                        'Content-Type': file.type,
+                    },
+                });
+            } catch (error) {
+                onProcessStateChange(READY);
+                console.log(error);
+                return;
+            }
 
-        try {
-          const { signed_url: signedUrl } = response.data.body
+            // Try to crop the file
 
-          response = await axios.put(signedUrl, file, {
-              headers: {
-                'Content-Type': file.type
-              }
-          })
+            try {
+                response = await axios.post(processAmazonShippingLabelUrl, {
+                    name: file.name,
+                });
+            } catch (error) {
+                if (error.response.data.message) {
+                    alert.error(error.response.data.message);
+                }
+                onProcessStateChange(READY);
 
-        } catch (error) {
-          onProcessStateChange(READY)
-          console.log(error)
-          return
-        }
+                return;
+            }
 
-        // Try to crop the file
+            // Try to download the file, and automatically open it
 
-        try {
-          response = await axios.post(processAmazonShippingLabelUrl, {
-              name: file.name
-          })
+            try {
+                const {
+                    signed_url: downloadSignedUrl,
+                    out_name: outName,
+                } = response.data.body;
 
-        } catch (error) {
+                axios
+                    .get(downloadSignedUrl, {
+                        responseType: 'blob',
+                    })
+                    .then((responseDownload) => {
+                        const url = window.URL.createObjectURL(
+                            new Blob([responseDownload.data]),
+                        );
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', outName);
+                        document.body.appendChild(link);
+                        link.click();
+                    });
+            } catch (error) {
+                alert.error('Something went wrong!');
+                console.log(error.response);
+            }
 
-          if(error.response.data.message){
-            alert.error(error.response.data.message)
-          }
-          onProcessStateChange(READY)
+            onProcessStateChange(READY);
+        },
+        [alert, onProcessStateChange],
+    );
 
-          return
-        }
+    const {
+        getRootProps,
+        getInputProps,
+        isDragActive,
+        isDragAccept,
+        isDragReject,
+    } = useDropzone({ accept: 'application/pdf', multiple: false, onDrop });
 
-        // Try to download the file, and automatically open it
+    const style = useMemo(
+        () => ({
+            ...baseStyle,
+            ...(isDragActive ? activeStyle : {}),
+            ...(isDragAccept ? acceptStyle : {}),
+            ...(isDragReject ? rejectStyle : {}),
+        }),
+        [isDragAccept, isDragActive, isDragReject],
+    );
 
-        try {
-          const { signed_url: downloadSignedUrl, out_name: outName } = response.data.body
-    
-          axios.get(downloadSignedUrl,{
-            responseType: 'blob',
-          }).then((responseDownload) => {
-              const url = window.URL.createObjectURL(new Blob([responseDownload.data]));
-              const link = document.createElement('a')
-              link.href = url
-              link.setAttribute('download', outName)
-              document.body.appendChild(link)
-              link.click()
-          });
-
-        } catch (error) {
-          alert.error('Something went wrong!')
-          console.log(error.response)
-        }
-
-        onProcessStateChange(READY)
-
-    }, [alert, onProcessStateChange])
-
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject
-  } = useDropzone({ accept: 'application/pdf', multiple: false, onDrop });
-
-  const style = useMemo(() => ({
-    ...baseStyle,
-    ...(isDragActive ? activeStyle : {}),
-    ...(isDragAccept ? acceptStyle : {}),
-    ...(isDragReject ? rejectStyle : {})
-  }), [isDragAccept, isDragActive, isDragReject]);
-
-  return (
-      <div {...getRootProps({style})}>
-        <input {...getInputProps()} />
-        <p>Drag 'n' drop your pdf or click here</p>
-      </div>
-  );
-}
+    return (
+        <div {...getRootProps({ style })}>
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop your pdf or click here</p>
+        </div>
+    );
+};
