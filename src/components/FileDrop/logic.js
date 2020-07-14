@@ -1,40 +1,9 @@
-import React, { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import axios from 'axios';
-import { useDropzone } from 'react-dropzone';
-import { useAlert } from 'react-alert';
-import { READY, PROCESSING } from '../constants';
+import { READY, PROCESSING } from '../../constants';
 
-const baseStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#fafafa',
-    color: '#bdbdbd',
-    outline: '2px dashed #ccc',
-    outlineOffset: '-4px',
-    transition: 'border .24s ease-in-out',
-    margin: '1px',
-};
-
-const activeStyle = {
-    outlineColor: '#2196f3',
-};
-
-const acceptStyle = {
-    outlineColor: '#00e676',
-};
-
-const rejectStyle = {
-    outlineColor: '#ff1744',
-};
-
-export default ({ onProcessStateChange }) => {
-    const alert = useAlert();
-
-    const onDrop = useCallback(
+export const useOnDrop = (alert, onProcessStateChange) => {
+    return useCallback(
         async ([file]) => {
             if (!file) {
                 alert.error('Only pdf files are supported.');
@@ -59,7 +28,6 @@ export default ({ onProcessStateChange }) => {
             } catch (error) {
                 onProcessStateChange(READY);
                 alert.error('Something went wrong!');
-                console.log(error);
                 return;
             }
 
@@ -75,7 +43,6 @@ export default ({ onProcessStateChange }) => {
                 });
             } catch (error) {
                 onProcessStateChange(READY);
-                console.log(error);
                 return;
             }
 
@@ -118,36 +85,10 @@ export default ({ onProcessStateChange }) => {
                     });
             } catch (error) {
                 alert.error('Something went wrong!');
-                console.log(error.response);
             }
 
             onProcessStateChange(READY);
         },
         [alert, onProcessStateChange],
-    );
-
-    const {
-        getRootProps,
-        getInputProps,
-        isDragActive,
-        isDragAccept,
-        isDragReject,
-    } = useDropzone({ accept: 'application/pdf', multiple: false, onDrop });
-
-    const style = useMemo(
-        () => ({
-            ...baseStyle,
-            ...(isDragActive ? activeStyle : {}),
-            ...(isDragAccept ? acceptStyle : {}),
-            ...(isDragReject ? rejectStyle : {}),
-        }),
-        [isDragAccept, isDragActive, isDragReject],
-    );
-
-    return (
-        <div {...getRootProps({ style })}>
-            <input {...getInputProps()} />
-            <p>Drag 'n' drop your pdf or click here</p>
-        </div>
     );
 };
