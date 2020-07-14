@@ -1,7 +1,7 @@
 .donation {
     background-color: white;
     border: none;
-    color: #8A2BE2;
+    color: #8a2be2;
     margin-left: 15px;
     margin-right: 30px;
     height: 30px;
@@ -9,8 +9,9 @@
     font-size: 15px;
     font-weight: 500;
     width: 150px;
+    transition: all 0.2s;
     &:hover {
-        cursor:pointer;
-        background-color: #eeeeee;
+        cursor: pointer;
+        transform: translateY(-2px);
     }
 }
