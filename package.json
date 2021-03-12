@@ -48,7 +48,7 @@
     "react-alert": "^6.0.0",
     "react-alert-template-basic-with-icons": "1.2.2",
     "react-app-polyfill": "^1.0.4",
-    "react-dev-utils": "^9.1.0",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "^16.12.0",
     "react-dropzone": "10.1.9",
     "react-loader-spinner": "^3.1.5",
